@@ -185,7 +185,7 @@ function CampaignCard({
         <div className={`rounded-xl border bg-white shadow-sm overflow-hidden transition-all ${!campaign.active ? "opacity-60" : ""}`}>
             <div className="p-5 flex items-start gap-4">
                 {/* Icon */}
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-lg bg-linear-to-br from-violet-500 to-purple-600 flex items-center justify-center shrink-0">
                     <Icon icon="solar:robot-bold" width={20} className="text-white" />
                 </div>
 
@@ -216,7 +216,7 @@ function CampaignCard({
                             <span>{s.pending} pending · {s.failed > 0 ? <span className="text-red-500">{s.failed} failed</span> : "0 failed"}</span>
                         </div>
                         <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
-                            <div className="h-full bg-gradient-to-r from-violet-500 to-purple-600 rounded-full transition-all"
+                            <div className="h-full bg-linear-to-r from-violet-500 to-purple-600 rounded-full transition-all"
                                 style={{ width: `${progress}%` }} />
                         </div>
                     </div>
