@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import AiCampaignJob from "@/plugin/ai-auto-post/models/AiCampaignJob";
-import AiCampaign from "@/plugin/ai-auto-post/models/AiCampaign";
 import Post from "@/models/post";
 import { createJobsForCampaign } from "@/plugin/ai-auto-post/lib/jobProcessor";
 

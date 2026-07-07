@@ -4,6 +4,7 @@ import AiCampaignJob from "../models/AiCampaignJob";
 import Post from "@/models/post";
 import PostInfo from "@/models/post_info";
 import { generateArticle } from "./aiWriter";
+import { fetchMedia, buildMediaHtml } from "./mediaFetcher";
 
 function createSlug(title: string): string {
     if (!title) return `ai-post-${Date.now()}`;
@@ -58,11 +59,19 @@ export async function processDueJobs(): Promise<ProcessResult> {
             }
 
             // Generate the article via AI
-            const article = await generateArticle(
-                job.keyword,
-                campaign.prompt,
-                campaign.language
-            );
+            const article = await generateArticle(job.keyword, campaign.prompt, campaign.language);
+
+            // Fetch media (images + video) — non-fatal if it fails
+            let media = { images: [], videoId: "" };
+            try {
+                media = await fetchMedia(job.keyword);
+            } catch (err) {
+                console.warn(`[ai-auto-post] fetchMedia failed for "${job.keyword}":`, err);
+            }
+
+            // Append gallery images (2–10) + YouTube video to article content
+            const mediaHtml = buildMediaHtml(media.images, media.videoId);
+            const fullContent = article.content + mediaHtml;
 
             // Build a unique slug
             const baseSlug = createSlug(article.title);
@@ -82,17 +91,22 @@ export async function processDueJobs(): Promise<ProcessResult> {
 
             const postId = newPost._id;
 
-            // Build SEO data JSON (compatible with seo-meta plugin)
+            // Build SEO data JSON — keys must match seo-meta plugin format
             const seoData = JSON.stringify({
-                title:       article.seoTitle,
-                description: article.seoDescription,
-                keywords:    article.seoKeywords,
+                seo_title:       article.seoTitle,
+                seo_description: article.seoDescription,
+                seo_keywords:    article.seoKeywords,
+                seo_image:       media.images[0] || "",
             });
+
+            // Thumbnail = first image; all images stored in the images array
+            const thumbnailImage = media.images[0] || "";
 
             // Persist PostInfo fields
             const infoEntries = [
-                { name: "description",      value: article.content },
+                { name: "description",      value: fullContent },
                 { name: "shortDescription", value: article.shortDescription },
+                { name: "images",           value: JSON.stringify(media.images.length > 0 ? media.images : []) },
                 { name: "seo_data",         value: seoData },
             ];
 

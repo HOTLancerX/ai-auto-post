@@ -13,9 +13,12 @@ const LANGUAGES = [
 ];
 
 export default function AiAutoPostSettingsPage() {
-    const [apiUrl,  setApiUrl]  = useState("");
-    const [apiKey,  setApiKey]  = useState("");
-    const [aiModel, setAiModel] = useState("gpt-4o");
+    const [apiUrl,               setApiUrl]               = useState("");
+    const [apiKey,               setApiKey]               = useState("");
+    const [aiModel,              setAiModel]              = useState("gpt-4o");
+    const [googleApiKey,         setGoogleApiKey]         = useState("");
+    const [googleSearchEngineId, setGoogleSearchEngineId] = useState("");
+    const [youtubeApiKey,        setYoutubeApiKey]        = useState("");
     const [loading, setLoading] = useState(true);
     const [saving,  setSaving]  = useState(false);
     const [testing, setTesting] = useState(false);
@@ -29,6 +32,9 @@ export default function AiAutoPostSettingsPage() {
                     setApiUrl(d.settings.apiUrl   || "");
                     setApiKey(d.settings.apiKey   || "");
                     setAiModel(d.settings.aiModel || "gpt-4o");
+                    setGoogleApiKey(d.settings.googleApiKey || "");
+                    setGoogleSearchEngineId(d.settings.googleSearchEngineId || "");
+                    setYoutubeApiKey(d.settings.youtubeApiKey || "");
                 }
             })
             .finally(() => setLoading(false));
@@ -43,7 +49,7 @@ export default function AiAutoPostSettingsPage() {
             const res  = await fetch("/api/ai-auto-post-settings", {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ apiUrl, apiKey, aiModel }),
+                body: JSON.stringify({ apiUrl, apiKey, aiModel, googleApiKey, googleSearchEngineId, youtubeApiKey }),
             });
             const data = await res.json();
             flash(res.ok ? "Settings saved!" : `Error: ${data.error}`);
@@ -89,7 +95,12 @@ export default function AiAutoPostSettingsPage() {
             )}
 
             <form onSubmit={handleSave} className="flex flex-col gap-5">
+                {/* AI Writer API */}
                 <div className="bg-white rounded-xl border p-5 flex flex-col gap-4">
+                    <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+                        <Icon icon="solar:robot-bold" width={18} className="text-violet-600" />
+                        AI Writer API (OpenAI-compatible)
+                    </h3>
                     <div className="flex flex-col gap-1.5">
                         <label className="text-xs font-semibold text-gray-700">API Base URL</label>
                         <input
@@ -120,6 +131,57 @@ export default function AiAutoPostSettingsPage() {
                             className="rounded-lg border px-3.5 py-2.5 text-sm outline-none focus:border-indigo-500"
                         />
                         <p className="text-xs text-gray-400">e.g. gpt-4o, gpt-4-turbo, claude-3-5-sonnet, llama-3</p>
+                    </div>
+                </div>
+
+                {/* Google Image Search */}
+                <div className="bg-white rounded-xl border p-5 flex flex-col gap-4">
+                    <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+                        <Icon icon="solar:gallery-bold" width={18} className="text-blue-600" />
+                        Google Image Search API
+                    </h3>
+                    <div className="rounded-lg bg-blue-50 border border-blue-200 px-3 py-2 text-xs text-blue-700">
+                        <strong>Setup:</strong> Go to <a href="https://console.cloud.google.com" target="_blank" rel="noopener noreferrer" className="underline">Google Cloud Console</a> → Enable <strong>Custom Search API</strong> → Create credentials (API Key) → Create a <a href="https://programmablesearchengine.google.com/controlpanel/create" target="_blank" rel="noopener noreferrer" className="underline">Programmable Search Engine</a> and enable "Image Search".
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-semibold text-gray-700">Google API Key</label>
+                        <input
+                            type="password" value={googleApiKey}
+                            onChange={(e) => setGoogleApiKey(e.target.value)}
+                            placeholder="AIzaSy..."
+                            className="rounded-lg border px-3.5 py-2.5 text-sm outline-none focus:border-indigo-500"
+                        />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-semibold text-gray-700">Search Engine ID (CX)</label>
+                        <input
+                            type="text" value={googleSearchEngineId}
+                            onChange={(e) => setGoogleSearchEngineId(e.target.value)}
+                            placeholder="e.g. a1b2c3d4e5..."
+                            className="rounded-lg border px-3.5 py-2.5 text-sm outline-none focus:border-indigo-500"
+                        />
+                        <p className="text-xs text-gray-400">Your Custom Search Engine ID (cx parameter)</p>
+                    </div>
+                </div>
+
+                {/* YouTube Data API */}
+                <div className="bg-white rounded-xl border p-5 flex flex-col gap-4">
+                    <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+                        <Icon icon="solar:videocamera-record-bold" width={18} className="text-red-600" />
+                        YouTube Data API v3
+                    </h3>
+                    <div className="rounded-lg bg-red-50 border border-red-200 px-3 py-2 text-xs text-red-700">
+                        <strong>Setup:</strong> Go to <a href="https://console.cloud.google.com" target="_blank" rel="noopener noreferrer" className="underline">Google Cloud Console</a> → Enable <strong>YouTube Data API v3</strong> → Create credentials (API Key).
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-semibold text-gray-700">YouTube API Key</label>
+                        <input
+                            type="password" value={youtubeApiKey}
+                            onChange={(e) => setYoutubeApiKey(e.target.value)}
+                            placeholder="AIzaSy..."
+                            className="rounded-lg border px-3.5 py-2.5 text-sm outline-none focus:border-indigo-500"
+                        />
                     </div>
                 </div>
 

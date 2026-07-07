@@ -11,9 +11,12 @@ export async function GET() {
         if (!doc) doc = (await AiAutoPostSettings.create({})).toObject();
         return NextResponse.json({
             settings: {
-                apiUrl:  doc.apiUrl  || "",
-                apiKey:  doc.apiKey  || "",
-                aiModel: doc.aiModel || "gpt-4o",
+                apiUrl:               doc.apiUrl               || "",
+                apiKey:               doc.apiKey               || "",
+                aiModel:              doc.aiModel              || "gpt-4o",
+                googleApiKey:         doc.googleApiKey         || "",
+                googleSearchEngineId: doc.googleSearchEngineId || "",
+                youtubeApiKey:        doc.youtubeApiKey        || "",
             },
         });
     } catch (err) {
@@ -24,10 +27,17 @@ export async function GET() {
 export async function PUT(req: NextRequest) {
     try {
         await connectDB();
-        const { apiUrl, apiKey, aiModel } = await req.json();
+        const body = await req.json();
         await AiAutoPostSettings.findOneAndUpdate(
             {},
-            { apiUrl: apiUrl || "", apiKey: apiKey || "", aiModel: aiModel || "gpt-4o" },
+            {
+                apiUrl:               body.apiUrl               || "",
+                apiKey:               body.apiKey               || "",
+                aiModel:              body.aiModel              || "gpt-4o",
+                googleApiKey:         body.googleApiKey         || "",
+                googleSearchEngineId: body.googleSearchEngineId || "",
+                youtubeApiKey:        body.youtubeApiKey        || "",
+            },
             { upsert: true }
         );
         return NextResponse.json({ success: true });

@@ -18,18 +18,10 @@ export function register() {
         {
             key: "ai-auto-post",
             label: "AI Auto Post",
-            icon: "solar:robot-bold",
+            icon: "arcticons:ask-ai",
             slug: "ai-auto-post",
             parent: "",
             position: 26,
-        },
-        {
-            key: "ai-auto-post-campaigns",
-            label: "Campaigns",
-            icon: "solar:notebook-bold",
-            slug: "ai-auto-post/campaigns",
-            parent: "ai-auto-post",
-            position: 1,
         },
         {
             key: "ai-auto-post-settings",
@@ -47,13 +39,6 @@ export function register() {
             label: "AI Auto Post Campaigns",
             style: "left",
             position: 60,
-            path: AiCampaignsPage,
-        },
-        {
-            key: "ai-auto-post/campaigns",
-            label: "AI Auto Post Campaigns",
-            style: "left",
-            position: 61,
             path: AiCampaignsPage,
         },
         {
