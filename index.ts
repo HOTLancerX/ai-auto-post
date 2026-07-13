@@ -9,7 +9,7 @@ export const PLUGINS: PluginMeta = {
     description: "AI-powered bulk article generator. Create campaigns with keyword lists and post SEO-friendly articles automatically on a schedule.",
     author: "System",
     path: "https://github.com/HOTLancerX/ai-auto-post.git",
-    icon: "solar:robot-bold",
+    icon: "mingcute:pen-ai-line",
     color: "from-violet-500 to-purple-600",
 };
 
