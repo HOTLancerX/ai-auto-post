@@ -3,7 +3,7 @@ import AiAutoPostSettingsPage from "./settings/AiAutoPostSettingsPage";
 import AiCampaignsPage from "./admin/AiCampaignsPage";
 
 export const PLUGINS: PluginMeta = {
-    nx: "com.system.ai-auto-post",
+    nx: "ai-auto-post",
     name: "ai-auto-post",
     version: "1.0.0",
     description: "AI-powered bulk article generator. Create campaigns with keyword lists and post SEO-friendly articles automatically on a schedule.",
